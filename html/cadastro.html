@@ -9,28 +9,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/cadastro.css">
 </head>
 <body>
     <header>
-        <img src="../img/Logo-biolab.png" alt="BioLab Logo" width="200">
+        <img src="../img/Logo-biolab.png" alt="BioLab Logo">
         <hr>
     </header>
     <main>
         <h1>Bem-Vindo ao BioLab!</h1>
         <h2>Faça seu cadastro</h2>
-        <p>Para continuar, preencha os campos necessários. Caso já tenha um cadastro, <a href="../html/login.html">Faça login aqui.</a></p>
+        <p>Para continuar, preencha os campos necessários. Caso já tenha um cadastro, <a href="../html/login.html">Faça seu login aqui.</a></p>
     <form action="" method="post">
-            <label for="user">Nome de Usuário:</label>
-            <input type="text" name="user" id="user" placeholder="Digite aqui..." required>
-            <label for="user">Senha:</label>
-            <input type="text" name="password" id="password" placeholder="Digite aqui..." required>
-            <label for="position">Função:</label>
+            <div><label class="label-text" for="user">Nome de Usuário:</label> <br>
+            <input class="input-text" type="text" name="user" id="user" placeholder=" Digite aqui..." required></div>
+            <div><label class="label-text" for="user">Senha:</label> <br>
+            <input class="input-text" type="text" name="password" id="password" placeholder=" Digite aqui..." required></div>
+            <div><label class="label-cad" for="cargos">Função:</label> <br>
             <select name="cargos" id="cargos">
                 <option value="Biomedico">Biomédico</option>
                 <option value="Qualidade">Gestor de Qualidade</option>
                 <option value="Coordenador">Coordenador Técnico</option>
-            </select>
-            <input type="submit" value="Cadastrar">
+            </select></div>
+            <input class="enviar" type="submit" value="Cadastrar">
         </form>
     </main>
     <footer>

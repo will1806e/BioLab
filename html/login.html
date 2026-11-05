@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/cadastro.css">
 </head>
 <body>
     <header>
@@ -21,12 +22,12 @@
         <p>Para continuar, entre com seu Login e Senha. Caso não tenha um cadastro, <a href="../html/cadastro.html">Faça o seu cadastro aqui.</a></p>
 
         <form action="" method="post">
-            <label for="user">Nome de Usuário:</label>
-            <input type="text" name="user" id="user" placeholder="Digite aqui..." required> 
+            <div><label class="label-text" for="user">Nome de Usuário:</label>
+            <input class="input-text" type="text" name="user" id="user" placeholder="Digite aqui..." required> </div>
             <!--Required ajuda a não passar em branco, mas é possivel burlar, reforçar no back-end-->
-            <label for="user">Senha:</label>
-            <input type="text" name="password" id="password" placeholder="Digite aqui..." required>
-            <input type="submit" value="Enviar">
+            <div><label class="label-text" for="user">Senha:</label>
+            <input class="input-text" type="text" name="password" id="password" placeholder="Digite aqui..." required></div>
+            <input class="enviar" type="submit" value="Enviar">
         </form>
     </main>
     <footer>
