@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
  </head>
- <body>
+ <body class="app-shell page-dashboard">
     <header>
         <div>
             <p>Laboratório</p>
@@ -27,7 +27,7 @@
 
         <nav>
             <ul>
-                <a href="../html/index.html">
+                <a href="../html/index.html" aria-current="page">
                     <li>Dashboard</li>
                 </a>
                 <a href="../html/registrarCorridas.html">
@@ -122,24 +122,25 @@
                     <input type="button" value="+ Nova corrida">
                 </div>
             </div>
+            <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <td>
+                        <th>
                             DATA E HORA
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             EQUIPAMENTO
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             ANALITO
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             RESULTADO
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             STATUS
-                        </td>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -157,12 +158,13 @@
                             99,9 mg/dL
                         </td>
                         <td>
-                            Aceito
+                            <span class="status status--success">Aceito</span>
                         </td>
                     </tr>
                 </tbody>
                 
             </table>
+            </div>
         </section>
     </main>
     <footer>

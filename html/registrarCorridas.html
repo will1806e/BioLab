@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
+<body class="app-shell page-register">
     <header>
         <div>
             <p>Laboratório</p>
@@ -30,7 +30,7 @@
                 <a href="../html/index.html">
                     <li>Dashboard</li>
                 </a>
-                <a href="../html/registrarCorridas.html">
+                <a href="../html/registrarCorridas.html" aria-current="page">
                     <li>Registrar Corrida</li>
                 </a>
                 <a href="../html/historico.html">
@@ -93,7 +93,7 @@
                         <input type="text" name="resultado" id="resultado" placeholder="Ex.: 93,7">
                     </div>
                     <div>
-                        <label for="valor-alvo">Lote</label>
+                        <label for="valor-alvo">Valor alvo</label>
                         <input type="text" name="valor-alvo" id="valor-alvo">
                     </div>
                 </div>
@@ -114,8 +114,12 @@
                     </div>
                     <div>
                         <label for="limite-max">Limite máximo da bula</label>
-                        <input disabled type="text" name="limite-max" id="limite-max">
+                        <input type="text" name="limite-max" id="limite-max">
                     </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit">Registrar corrida</button>
+                </div>
             </form>
         </section>
     </main>

@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
+<body class="app-shell page-history">
     <header>
         <div>
             <p>Laboratório</p>
@@ -33,7 +33,7 @@
                 <a href="../html/registrarCorridas.html">
                     <li>Registrar Corrida</li>
                 </a>
-                <a href="../html/historico.html">
+                <a href="../html/historico.html" aria-current="page">
                     <li>Histórico</li>
                 </a>
                 <a href="../html/Irregularidades.html">
@@ -46,37 +46,40 @@
         </nav>
     </aside>
     <main>
-        <div>
+        <div class="page-intro">
             <p>RASTREABILIDADE</p>
             <h2>Histórico</h2>
             <p>Consulta de registros, classificação e responsáveis.</p>
         </div>
         <section>
+            <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <td>
+                        <th>
                             DATA E HORA
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             EQUIPAMENTO
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             ANALITO
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             RESULTADO
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             RESPONSÁVEL
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             FUNÇÃO
-                        </td>
-                        <td>
+                        </th>
+                        <th>
                             STATUS
-                        </td>
+                        </th>
                     </tr>
+                </thead>
+                <tbody>
                     <tr>
                         <td>
                             05/11/2026
@@ -97,11 +100,12 @@
                             Biomedico
                         </td>
                         <td>
-                            REJEITADO
+                            <span class="status status--danger">Rejeitado</span>
                         </td>
                     </tr>
-                </thead>
+                </tbody>
             </table>
+            </div>
         </section>
     </main>
     <footer>
