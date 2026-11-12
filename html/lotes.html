@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotes</title>
+    <link rel="shortcut icon" href="../img/biolab_favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/lotes.css">
+</head>
+<body class="app-shell page-history">
+    <header>
+        <div>
+            <p>Laboratório</p>
+            <h1>Lotes cadastrados</h1>
+        </div>
+        <div>
+            Cargo ∘ Nome
+            <img src="../img/logout.png" alt="sair da conta"> <!--Colocar cargo da conta e nome da conta-->
+        </div>
+        <hr>
+    </header>
+    <aside>
+        <a href="../html/index.html"><img src="../img/Logo-biolab.png" alt="Logo da BioLab" width="100"></a>
+
+        <nav>
+            <ul>
+                <a href="../html/index.html">
+                    <li>Dashboard</li>
+                </a>
+                <a href="../html/registrarCorridas.html">
+                    <li>Registrar Corrida</li>
+                </a>
+                <a href="../html/historico.html">
+                    <li>Histórico</li>
+                </a>
+                <a href="../html/Irregularidades.html">
+                    <li>Irregularidades</li>
+                </a>
+                <a href="../html/equipamentos.html">
+                    <li>Equipamentos</li>
+                </a>
+                <a href="../html/lotes.html"  aria-current="page">
+                    <li>Lotes</li>
+                </a>
+            </ul>
+        </nav>
+    </aside>
+    <main>
+        <div hidden class="fundo-voltar">
+            <section hidden id="deletar-analito">
+                <p><strong>Você tem certeza que deseja excluir permanentemente este lote?</strong></p>
+                <div><button>Cancelar</button> <button id="deletar">Deletar</button></div>
+            </section>
+
+            <section id="novo-lote">
+                <form action="" method="post">
+                    <div>
+                        <label for="analito">Código do lote:</label>
+                        <input type="text" name="analito" id="analito" placeholder="Digite aqui..." required>
+                    </div>
+                    <div>
+                        <label for="validade">Data de validade:</label>
+                        <input class="calendario" type="date" name="validade" id="validade" required>
+                    </div>
+                    <div>
+                        <label for="fabricante">Fabricante:</label>
+                        <input type="text" name="fabricante" id="fabricante" placeholder="Digite aqui...">
+                    </div>
+                    <div>
+                        <label id="label-amostras" for="amostras">Selecione as amostras contidas:</label>
+                        <div class="check-amostras">
+                            <div>
+                                <input type="checkbox" name="glicose" id="glicose">
+                                <label class="check-label" for="glicose">Glicose</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="div-botao">
+                        <input type="submit" value="Enviar">
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <div id="intro-button">
+            <div class="page-intro">
+                <p>ANALITOS</p>
+                <h2>Lotes</h2>
+                <p>Consulta e gerenciamento de lotes cadastrados.</p>
+            </div>
+            <div >
+                <button>Novo Lote</button>
+            </div>
+        </div>
+        <section>
+            <div class="table-wrap">
+            <table class="table-wrap">
+                    <thead>
+                        <tr>
+                            <th>
+                                LOTE
+                            </th>
+                            <th>
+                                DATA DE VALIDADE
+                            </th>
+                            <th>
+                                FABRICANTE
+                            </th>
+                            <th>
+                                GERENCIAR
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                AS240
+                            </td>
+                            <td>
+                                15/12/2025
+                            </td>
+                            <td>
+                                Cleiton amostras
+                            </td>
+                            <td>
+                                <img src="../img/edit.png" alt="editar" class="icon"> <img src="../img/delete.png" alt="Deletar" class="icon icon-delete" >
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <hr>
+        <p>&copy; 2026 BioLab. Todos os direitos reservados.</p>   
+    </footer>
+</body>
+</html>
