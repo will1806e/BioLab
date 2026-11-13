@@ -250,7 +250,7 @@ tbody tr:last-child td { border-bottom: 0; }
 .status--danger { color: var(--danger); background: #fff0f0; }
 
 /* Botões e formulários */
-.button, .enviar, input[type="submit"], input[type="button"], button, .page-equipment article a {
+.button, .enviar, input[type="submit"], input[type="file"]::file-selector-button, input[type="button"], button, .page-equipment article a {
     display: inline-flex;
     align-items: center;
     justify-content: center;

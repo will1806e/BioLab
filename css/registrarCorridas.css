@@ -1,0 +1,22 @@
+section{
+    margin-bottom: 2rem;
+}
+
+#lercsv::file-selector-button{
+    border: solid 0 black;
+}
+
+#formcsv{
+    display: flex;
+    flex-direction: column;
+}
+
+#botao-csv{
+    width: auto;
+}
+
+.div-csv{
+    display: flex !important;
+    flex-direction: column;
+    margin: 0 !important;
+}
