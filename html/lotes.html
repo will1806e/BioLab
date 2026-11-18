@@ -37,9 +37,6 @@
                 <a href="../html/historico.html">
                     <li>Histórico</li>
                 </a>
-                <a href="../html/Irregularidades.html">
-                    <li>Irregularidades</li>
-                </a>
                 <a href="../html/equipamentos.html">
                     <li>Equipamentos</li>
                 </a>
@@ -51,13 +48,16 @@
     </aside>
     <main>
         <div hidden class="fundo-voltar">
-            <section hidden id="deletar-lote">
+            <section hidden class="deletar-lote">
                 <p><strong>Você tem certeza que deseja excluir permanentemente este lote?</strong></p>
-                <div><button>Cancelar</button> <button id="deletar">Deletar</button></div>
+                <div><button>Cancelar</button> <button class="deletar">Deletar</button></div>
             </section>
 
             <section hidden class="novo-lote">
-                <h3>Adicionar Lotes</h3>
+                <div class="titulo-voltar">
+                    <h3>Adicionar Lotes</h3>
+                    <img class="icon-fechar" src="../img/close.png" alt="Fechar Tela">
+                </div>
                 <form action="" method="post">
                     <div>
                         <label for="lote">Código do lote:</label>
@@ -87,10 +87,12 @@
                         <input type="submit" value="Adicionar">
                     </div>
                 </form>
-            </section>
-                
+            </section>  
             <section hidden class="novo-lote" id="gerenciar-analitos"> <!--Gerenciamento de amostras-->
-                <h3>Gerenciar Analitos</h3>
+                <div class="titulo-voltar">
+                    <h3>Gerenciar Analitos</h3>
+                    <img class="icon-fechar" src="../img/close.png" alt="Fechar Tela">
+                </div>
                 <p>Não é possível excluir um analito que pertence a algum lote.</p>
                 <form action="" method="post">
                     <div>
@@ -105,7 +107,7 @@
             </section>
         </div>
 
-        <div id="intro-button">
+        <div class="intro-button">
             <div class="page-intro">
                 <p>ANALITOS</p>
                 <h2>Lotes</h2>

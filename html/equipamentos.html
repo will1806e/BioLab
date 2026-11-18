@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/equipamentos.css">
 </head>
 <body class="app-shell page-equipment">
     <header>
@@ -36,9 +37,6 @@
                 <a href="../html/historico.html">
                     <li>Histórico</li>
                 </a>
-                <a href="../html/Irregularidades.html">
-                    <li>Irregularidades</li>
-                </a>
                 <a href="../html/equipamentos.html" aria-current="page">
                     <li>Equipamentos</li>
                 </a>
@@ -49,12 +47,66 @@
         </nav>
     </aside>
     <main>
-        <div class="page-intro">
-            <p>CADASTRO E STATUS</p>
-            <h2>Equipamentos registrados</h2>
-            <p>Visão dos equipamentos acompanhados pelo CQI.</p>
+        <div hidden class="fundo-voltar">
+            <section hidden class="novo-equipamento">
+                <div class="titulo-voltar">
+                    <h3>Adicionar Equipamento</h3>
+                    <img class="icon-fechar" src="../img/close.png" alt="Fechar Tela">
+                </div>
+
+                <form action="" method="post">
+                    <div><label for="nome-equipamento">Nome do Equipamento:</label>
+                    <input type="text" name="nome-equipamento" id="nome-equipamento" placeholder="Digite aqui..." required></div>
+
+                    <div><label for="modelo">Modelo:</label>
+                    <input type="text" name="modelo" id="modelo" placeholder="Digite aqui..." required></div>
+
+                    <div><label for="serie">Numero da Série:</label>
+                    <input type="text" name="serie" id="serie" placeholder="Digite aqui..." required></div>
+
+                    <div><label for="observacoes">Observações:</label>
+                    <textarea name="observacoes" id="observacoes" placeholder="Digite aqui..."></textarea></div>
+
+                    <div><input type="submit" value="Adicionar"></div>
+                </form>
+            </section>
+
+            <section hidden class="novo-equipamento" id="equipamentos-info">
+                <div class="titulo-voltar">
+                    <h3>Informações do Equipamento</h3>
+                    <img class="icon-fechar" src="../img/close.png" alt="Fechar Tela">
+                </div>
+                <div id="infos">
+                    <div>
+                        <p><strong>Nome do Equipamento:</strong></p>
+                        <span></span>
+                    </div>
+                    <div>
+                        <p><strong>Modelo:</strong></p>
+                        <span></span>
+                    </div>
+                    <div>
+                        <p><strong>Número da Série:</strong></p>
+                        <span></span>
+                    </div>
+                    <div>
+                        <p><strong>Observações:</strong></p>
+                        <span></span>
+                    </div>
+                </div>
+            </section>
         </div>
 
+        <div class="intro-button">
+            <div class="page-intro">
+                <p>CADASTRO E STATUS</p>
+                <h2>Equipamentos registrados</h2>
+                <p>Visão dos equipamentos acompanhados pelo CQI.</p>
+            </div>
+            <div>
+                <button>Novo Equipamento</button>
+            </div>
+        </div>
         <article>
             <div>
                 <p>ATIVO</p>
@@ -67,7 +119,6 @@
                 </form>
             </div>
         </article>
-
     </main>
     <footer>
         <hr>

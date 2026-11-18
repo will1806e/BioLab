@@ -150,7 +150,7 @@ button, input, select { font: inherit; }
 /* Introduções e cartões */
 .page-intro { margin-bottom: 1.5rem; }
 .page-intro > p:first-child, .page-register > main > p:first-child {
-    margin-bottom: .25rem;
+    margin-bottom: 0.25rem;
     color: var(--blue-700);
     font-size: .76rem;
     font-weight: 800;
@@ -247,6 +247,7 @@ tbody tr:last-child td { border-bottom: 0; }
 .status { display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .65rem; border-radius: 99px; font-size: .74rem; font-weight: 800; text-transform: uppercase; }
 .status::before { width: .42rem; height: .42rem; content: ""; background: currentColor; border-radius: 50%; }
 .status--success { color: var(--success); background: #e6f7f0; }
+.status--alert{ color: var(--warning); background: #fffde7;}
 .status--danger { color: var(--danger); background: #fff0f0; }
 
 /* Botões e formulários */
@@ -270,7 +271,7 @@ tbody tr:last-child td { border-bottom: 0; }
     box-shadow: 0 10px 24px rgba(8, 116, 185, .26);
 }
 label { display: block; margin-bottom: .4rem; color: var(--navy-900); font-size: .88rem; font-weight: 700; }
-input[type="text"], input[type="date"], input[type="password"], input[type="email"], select {
+input[type="text"], textarea, input[type="date"], input[type="password"], input[type="email"], select {
     width: 100%;
     min-height: 3rem;
     padding: .72rem .85rem;
@@ -367,4 +368,43 @@ input:disabled { color: #8ba0ae; background: #edf3f6; cursor: not-allowed; }
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+
+.intro-button{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2rem;
+    justify-content: space-between
+}
+
+.intro-button > div:has(> button){
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.intro-button > .page-intro{
+    margin: 0;
+}
+
+.fundo-voltar{
+    z-index: 999;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.titulo-voltar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.icon-fechar{
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
 }
