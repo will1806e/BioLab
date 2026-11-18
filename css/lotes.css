@@ -42,7 +42,7 @@ th, td{
     text-align: center;
 }
 
-#novo-lote, #deletar-lote{
+.novo-lote, #deletar-lote{
     box-sizing: border-box;
     padding: 1.5rem;
     margin: 0;
@@ -60,7 +60,7 @@ th, td{
     opacity: 1;
 }
 
-#novo-lote > form{
+.novo-lote > form{
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -68,7 +68,7 @@ th, td{
     justify-content: space-between;
 }
 
-#div-botao{
+.div-botao{
     margin: 0.5rem 0 0 0;
     display: flex;
     flex-direction: column;
@@ -76,7 +76,7 @@ th, td{
     align-items: center;
 }
 
-#novo-lote{
+.novo-lote{
     height: min(80vh, 35rem);
     width: min(90vw, 50rem);
     overflow-y: auto;
@@ -86,6 +86,7 @@ th, td{
     gap: 1rem;
     z-index: 1000;
     text-align: center;
+    width: min(90vw, 50rem);
 }
 
 #deletar-lote > div{
@@ -99,7 +100,7 @@ th, td{
     background: linear-gradient(135deg, rgba(255, 0, 0, 0.658), rgba(192, 1, 1, 0.904));
 }
 
-#novo-lote[hidden], #deletar-lote[hidden]{
+.novo-lote[hidden], #deletar-lote[hidden], #gerenciar-analitos[hidden]{
   display: none;
 }   
 
@@ -145,4 +146,40 @@ th, td{
     border-radius: 2rem;
     padding: 0.4rem;
     font-family: "Google Sans", "Inter", system-ui, sans-serif;
+}
+
+#add-amostra{
+    font-size: small;
+    width: 10rem;
+    padding: 0.5rem;
+    box-shadow:  0 0 0 2px rgba(11, 139, 211, .12);
+}
+
+div:has(> #add-amostra){
+    margin-top: 1.5rem;
+    
+}
+
+#gerenciar-analitos{
+    overflow-y: auto;
+    display: block;
+    height: auto;
+}
+
+#gerenciar-analitos > h3{
+ margin: 0;
+}
+
+#gerenciar-analitos > p{
+    font-size: small;
+}
+
+#gerenciar-analitos > form > .div-botao{
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 3rem;
+}
+
+.div-botao > input[value="Deletar"]{
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.658), rgba(192, 1, 1, 0.904));
 }

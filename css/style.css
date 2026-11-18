@@ -254,7 +254,6 @@ tbody tr:last-child td { border-bottom: 0; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     padding: .65rem 1.1rem;
     color: #fff;
     background: linear-gradient(135deg, var(--blue-700), var(--blue-600));
@@ -265,7 +264,7 @@ tbody tr:last-child td { border-bottom: 0; }
     cursor: pointer;
     transition: 180ms ease;
 }
-.button:hover, .enviar:hover, input[type="button"]:hover, button:hover, .page-equipment article a:hover {
+.button:hover, .enviar:hover, input[type="submit"]:hover, input[type="button"]:hover, button:hover, .page-equipment article a:hover {
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 10px 24px rgba(8, 116, 185, .26);

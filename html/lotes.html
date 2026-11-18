@@ -51,16 +51,17 @@
     </aside>
     <main>
         <div hidden class="fundo-voltar">
-            <section hidden id="deletar-analito">
+            <section hidden id="deletar-lote">
                 <p><strong>Você tem certeza que deseja excluir permanentemente este lote?</strong></p>
                 <div><button>Cancelar</button> <button id="deletar">Deletar</button></div>
             </section>
 
-            <section id="novo-lote">
+            <section hidden class="novo-lote">
+                <h3>Adicionar Lotes</h3>
                 <form action="" method="post">
                     <div>
-                        <label for="analito">Código do lote:</label>
-                        <input type="text" name="analito" id="analito" placeholder="Digite aqui..." required>
+                        <label for="lote">Código do lote:</label>
+                        <input type="text" name="lote" id="lote" placeholder="Digite aqui..." required>
                     </div>
                     <div>
                         <label for="validade">Data de validade:</label>
@@ -78,9 +79,27 @@
                                 <label class="check-label" for="glicose">Glicose</label>
                             </div>
                         </div>
+                        <div>
+                            <input id="add-amostra" type="button" value="Gerenciar amostras">
+                        </div>
                     </div>
-                    <div id="div-botao">
-                        <input type="submit" value="Enviar">
+                    <div class="div-botao">
+                        <input type="submit" value="Adicionar">
+                    </div>
+                </form>
+            </section>
+                
+            <section hidden class="novo-lote" id="gerenciar-analitos"> <!--Gerenciamento de amostras-->
+                <h3>Gerenciar Analitos</h3>
+                <p>Não é possível excluir um analito que pertence a algum lote.</p>
+                <form action="" method="post">
+                    <div>
+                        <label for="analito">Nome do Analito:</label>
+                        <input type="text" name="analito" id="analito" placeholder="Digite aqui..." required>
+                    </div>
+                    <div class="div-botao">
+                        <input type="submit" value="Adicionar">
+                        <input type="button" value="Deletar">
                     </div>
                 </form>
             </section>
