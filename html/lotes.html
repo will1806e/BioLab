@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/lotes.css">
-    <script src="../javaScript/lotes.js" defer></script>
+    <script type="module" src="../javaScript/lotes.js"></script>
 </head>
 <body class="app-shell page-history">
     <header>
@@ -51,7 +51,7 @@
         <div class="fundo-voltar escondido">
             <section class="deletar-lote escondido">
                 <p><strong>Você tem certeza que deseja excluir permanentemente este lote?</strong></p>
-                <div><button id="botao-cancelar" type="reset" form="form-analito">Cancelar</button> <button class="deletar" type="submit" form="form-analito">Deletar</button></div>
+                <div><button id="botao-cancelar" type="button" >Cancelar</button> <button id="confirmar-exclusao" class="deletar" type="button" >Deletar</button></div>
             </section>
 
             <section class="novo-lote escondido">
@@ -59,7 +59,7 @@
                     <h3>Adicionar Lotes</h3>
                     <img class="icon-fechar" src="../img/close.png" alt="Fechar Tela">
                 </div>
-                <form action="" method="post">
+                <form id="form-lote" action="" method="post">
                     <div>
                         <label for="lote">Código do lote:</label>
                         <input type="text" name="lote" id="lote" placeholder="Digite aqui..." required>
@@ -74,12 +74,7 @@
                     </div>
                     <div>
                         <label id="label-amostras" for="amostras">Selecione as amostras contidas:</label>
-                        <div class="check-amostras">
-                            <div>
-                                <input type="checkbox" name="glicose" id="glicose">
-                                <label class="check-label" for="glicose">Glicose</label>
-                            </div>
-                        </div>
+                        <div class="check-amostras"></div>
                         <div>
                             <input id="add-amostra" type="button" value="Gerenciar amostras">
                         </div>
@@ -88,7 +83,7 @@
                         <input type="submit" value="Adicionar">
                     </div>
                 </form>
-            </section>  
+            </section>
             <section class="novo-lote escondido" id="gerenciar-analitos"> <!--Gerenciamento de amostras-->
                 <div class="titulo-voltar">
                     <h3>Gerenciar Analitos</h3>
@@ -98,9 +93,9 @@
                 <form action="" method="post" id="form-analito">
                     <div>
                         <label for="analito">Nome do Analito:</label>
-                        <input type="text" name="analito" id="analito" placeholder="Digite aqui..." required>
+                        <input type="text" name="analito" id="analito" list="analitos-opcoes" placeholder="Digite aqui..." required>
                     </div>
-                    <div class="div-botao">
+                    <datalist id="analitos-opcoes"></datalist><div class="div-botao">
                         <input type="submit" value="Adicionar">
                         <input id="botao-deletar" type="button" value="Deletar">
                     </div>
@@ -137,30 +132,14 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                AS240
-                            </td>
-                            <td>
-                                15/12/2025
-                            </td>
-                            <td>
-                                Cleiton amostras
-                            </td>
-                            <td>
-                                <img src="../img/edit.png" alt="editar" class="icon"> <img src="../img/delete.png" alt="Deletar" class="icon icon-delete" >
-                            </td>
-                        </tr>
-                        
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </section>
     </main>
     <footer>
         <hr>
-        <p>&copy; 2026 BioLab. Todos os direitos reservados.</p>   
+        <p>&copy; 2026 BioLab. Todos os direitos reservados.</p>
     </footer>
 </body>
 </html>

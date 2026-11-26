@@ -1,0 +1,16 @@
+/* Complementos exclusivos do dashboard; a folha original permanece intacta. */
+.page-dashboard main { grid-template-columns: minmax(0, 1fr); min-width: 0; }
+.page-dashboard main > section { min-width: 0; }
+.cq-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.cq-filtro { width: min(100%, 28rem); }
+.cq-filtro label { font-size: .75rem; }
+#grafico { width: 100%; overflow-x: auto; margin-top: 1.5rem; background: var(--surface); }
+#grafico svg { display: block; min-width: 850px; }
+#grafico-resumo, .cq-legenda { color: var(--muted); font-size: .85rem; margin-top: 1rem; }
+.cq-legenda .aceito { color: var(--success); }
+.cq-legenda .alerta { color: var(--warning); }
+.cq-legenda .rejeitado { color: var(--danger); }
+.status--warning { color: var(--warning); background: #fff5e6; }
+.page-dashboard main > section:nth-child(3) li.alerta-rejeitado > div:first-child { background: var(--danger); box-shadow: 0 0 0 5px rgba(200, 69, 69, .12); }
+@media (max-width: 780px) { .page-dashboard nav ul > a { flex: 0 0 auto; } }
+@media (max-width: 600px) { .cq-filtro { width: 100%; } }

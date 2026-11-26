@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/registrarCorridas.css">
+    <script type="module" src="../javaScript/registrarCorridas.js"></script>
 </head>
 <body class="app-shell page-register">
     <header>
@@ -49,41 +50,32 @@
     <main>
         <p>NOVA CORRIDA</p>
         <h2>Registrar Corrida</h2>
-        <p>Informe os dados da corrida para análise automática.</p>
+        <p>Cadastre equipamentos e lotes antes de registrar a corrida. Selecione um lote válido e um dos seus analitos.</p>
 
         <section>
             <h3>Identificação da corrida</h3>
-            <form action="#" method="post">
+            <form id="form-corrida" action="#" method="post">
                 <div>
                     <div>
                         <label for="equipamento">Equipamento</label>
                         <select name="equipamento" id="equipamento" required>
                             <option hidden selected value="">Selecione uma máquina</option>
-                            <option value="OCABALA1234">OCABALA1234</option>
+
                         </select>
                     </div>
                     <div>
                         <label for="analito">Analito</label>
-                        <select name="analito" id="analito">
-                            <option hidden selected value="">Selecione um analito</option>
-                            <option value="glicose">Glicose</option>
-                        </select>
+                        <select name="analito" id="analito" required><option value="">Selecione</option></select>
                     </div>
                 </div>
                 <div>
                     <div>
                         <label for="controle">Material de controle</label>
-                        <select name="controle" id="controle">
-                            <option hidden selected value="">Selecione um material de controle</option>
-                            <option value="nivel1">Controle Nivel 1</option>
-                        </select>
+                        <input type="text" id="controle" name="controle" required maxlength="100">
                     </div>
                     <div>
                         <label for="lote">Lote</label>
-                        <select name="lote" id="lote">
-                            <option hidden selected value="">Selecione um lote</option>
-                            <option value="GOA-2026-03">GOA-2026-03</option>
-                        </select>
+                        <select name="lote" id="lote" required><option value="">Selecione</option></select>
                     </div>
                 </div>
                 <hr>
@@ -91,11 +83,11 @@
                 <div>
                     <div>
                         <label for="resultado">Resultado obtido</label>
-                        <input type="text" name="resultado" id="resultado" placeholder="Ex.: 93,7">
+                        <input type="text" name="resultado" id="resultado" required placeholder="Ex.: 93,7">
                     </div>
                     <div>
                         <label for="valor-alvo">Valor alvo</label>
-                        <input type="text" name="valor-alvo" id="valor-alvo">
+                        <input type="text" name="valor-alvo" id="valor-alvo" required>
                     </div>
                 </div>
                 <div>
@@ -105,7 +97,7 @@
                     </div>
                     <div>
                         <label for="unidade">Unidade de medida</label>
-                        <input type="text" name="unidade" id="unidade">
+                        <input type="text" name="unidade" id="unidade" required>
                     </div>
                 </div>
                 <div>
@@ -113,28 +105,29 @@
                         <label for="limite-min">Limite mínimo da bula</label>
                         <input type="text" name="limite-min" id="limite-min">
                     </div>
-                    
+
                 </div>
+                <div><div><label for="desvio-padrao">Desvio padrão de referência</label><input type="text" id="desvio-padrao" name="desvio-padrao" required></div></div>
                 <div class="form-actions">
                     <input type="submit" value="Registrar corrida">
                 </div>
             </form>
         </section>
         <section id="section-csv">
-            <h3>Ou gere um gráfico pronto:</h3>
+            <h3>Ou gere um gráfico pronto:</h3><p>Importação CSV pendente da definição do formato da planilha.</p>
             <form id="formcsv" action="" method="post">
                 <div class="div-csv">
                     <label for="lercsv">Inserir planilha:</label>
-                    <input id="lercsv" type="file" name="lercsv" id="lercsv">
+                    <input id="lercsv" type="file" disabled name="lercsv">
                 </div>
 
-                <div class="form-actions"><input id="botao-csv" type="submit" value="Enviar"></div>
+                <div class="form-actions"><input id="botao-csv" disabled type="submit" value="Enviar"></div>
             </form>
         </section>
     </main>
     <footer>
         <hr>
-        <p>&copy; 2026 BioLab. Todos os direitos reservados.</p>   
+        <p>&copy; 2026 BioLab. Todos os direitos reservados.</p>
     </footer>
 </body>
 </html>
