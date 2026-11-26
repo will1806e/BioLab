@@ -1,6 +1,6 @@
 # BioLab — controle interno de qualidade
 
-Aplicação acadêmica com páginas HTML, JavaScript modular por página e API Python/Flask. Usa MySQL na execução local e Neon Postgres na implantação Vercel. O gráfico de **Levey-Jennings** aparece no dashboard e pode ser selecionado pelo filtro à direita de “Controle de qualidade”. Não há importação de CSV nesta etapa.
+Aplicação acadêmica com páginas HTML, JavaScript modular por página e API Python/Flask. Usa MySQL na execução local e Neon Postgres na implantação Vercel. O gráfico de **Levey-Jennings** aparece no dashboard e pode ser selecionado pelos filtros de equipamento, lote e analito em “Controle de qualidade”. Não há importação de CSV nesta etapa.
 
 ## Integração com as novidades do repositório
 
@@ -10,7 +10,7 @@ Base atualizada até o commit `8706656` de [will1806e/BioLab](https://github.com
 - Equipamentos usam os novos modais e persistem nome, modelo, número de série e observações. O botão Informações preenche o modal e o histórico pode ser filtrado pela máquina.
 - Lotes permitem cadastrar, listar, editar e excluir, com validade, fabricante e associação a analitos. Gerenciar amostras cadastra/exclui analitos; exclusões com vínculos ao lote ou histórico são bloqueadas.
 - Registrar Corrida usa lotes cadastrados e filtra os analitos pelo lote. Lotes vencidos ou sem validade não podem receber novas corridas. O servidor repete essas validações.
-- O desvio padrão de referência foi reinserido no formulário: os limites da bula não bastam para determinar o DP. O formulário CSV novo foi preservado, mas está desabilitado até a definição do formato.
+- Para séries novas, o projeto trata os limites da bula como ±3 DP e calcula o desvio padrão automaticamente. O formulário CSV novo foi preservado, mas está desabilitado até a definição do formato.
 - O dashboard mantém os gráficos e o filtro. O histórico mostra lote **e** resultado, além dos registros legados que não possuem resultado numérico.
 - O SQL remoto foi ampliado para armazenar séries, resultados e regras. O campo `senha_hash`, antes limitado a 15 caracteres, comporta agora 255.
 
@@ -21,17 +21,19 @@ Base atualizada até o commit `8706656` de [will1806e/BioLab](https://github.com
 Requer Python 3.10+ e MySQL 8+ ou MariaDB 10.4+ (por exemplo, o MySQL do XAMPP). Inicie o serviço do banco na porta 3306. Na pasta do projeto:
 
 ```powershell
-python -m venv .venv
+$senha = Read-Host 'Senha do MySQL local (Enter se vazia)' -AsSecureString
+$env:DB_PASSWORD = [System.Net.NetworkCredential]::new('', $senha).Password
+py -m venv .venv
 .\.venv\Scripts\python -m pip install -r requirements.txt
 .\.venv\Scripts\python -m flask --app python/app.py init-db
 .\.venv\Scripts\python python/app.py
 ```
 
-Abra **http://127.0.0.1:5000**. Não abra o HTML por `file://` nem por Live Server: a API é servida pelo Flask na mesma origem.
+Abra **http://127.0.0.1:5000**. Para usar a prévia do Live Server, mantenha o Flask na porta 5000, abra a pasta `Sistema_biomedicina` sozinha em uma janela do VS Code e clique em **Go Live**. O proxy configurado em `.vscode/settings.json` encaminha `/api` para o Flask. Para conferir, abra `/api/sessao` na porta da prévia. Antes do login, o resultado esperado é HTTP 401 com JSON.
 
 Conexão padrão: host `127.0.0.1`, porta `3306`, usuário `root`, senha vazia, banco `biolab`. `init-db` cria o banco e as tabelas ausentes e adapta os esquemas anteriores; não apaga registros. Não há contas, equipamentos ou corridas fictícios pré-cadastrados. Para um banco existente, faça backup antes da atualização e consulte a seção de migração abaixo.
 
-É possível personalizar com variáveis de ambiente, por exemplo `$env:DB_NAME='biolab'`. O arquivo `.env.example` apenas documenta as opções; não é carregado automaticamente. `SECRET_KEY` é opcional para uso local: sem ela, as sessões expiram ao reiniciar o servidor. A configuração root sem senha atende ao ambiente local solicitado; Flask está vinculado a `127.0.0.1`.
+É possível personalizar com variáveis de ambiente, por exemplo `$env:DB_NAME='biolab'`. O arquivo `.env.example` apenas documenta as opções; não é carregado automaticamente. `SECRET_KEY` é opcional para uso local: sem ela, as sessões expiram ao reiniciar o servidor. Ao abrir outro terminal, defina novamente `DB_PASSWORD` antes de iniciar o Flask. Se o seu Python já tem Flask e PyMySQL, execute `py python/app.py` na pasta do projeto. O Flask escuta em `127.0.0.1`.
 
 ## Hospedagem no Vercel
 
@@ -47,13 +49,13 @@ Depois de conectar o repositório Git ao projeto Vercel, pushes na branch de pro
 
 1. Abra Cadastro, informe usuário, CPF válido, senha de pelo menos oito caracteres e função; faça login.
 2. Cadastre o equipamento, com modelo e número de série. Em Lotes, abra Novo Lote → Gerenciar amostras para cadastrar os analitos; volte e salve o lote com validade e os analitos selecionados.
-3. Em Registrar Corrida, selecione equipamento, lote e analito e informe material/nível de controle, resultado, alvo, desvio padrão e unidade. Os limites de bula são opcionais; números aceitam vírgula decimal, sem separadores de milhar.
+3. Em Registrar Corrida, informe o resultado, a unidade, o alvo central e os dois limites da bula. Selecione o nível visual de 1 a 3. Números aceitam vírgula decimal.
 4. Ao salvar, o Python calcula as regras e grava a corrida em uma transação. O dashboard abre no gráfico correspondente.
-5. A mesma combinação **equipamento + analito + lote** continua o gráfico. Alterar qualquer parte cria uma nova série. Os campos de identificação ignoram diferenças de maiúsculas e acentos na comparação do banco.
-6. Para uma série existente, o formulário recupera a referência e bloqueia sua edição. A API também rejeita mudanças de material, unidade, alvo, desvio ou limites de bula: isso evita misturar referências em um único gráfico.
+5. A mesma combinação **equipamento + analito + lote** continua o gráfico. Alterar qualquer parte cria uma nova série. O formulário identifica os itens pelos IDs do catálogo.
+6. Nas corridas seguintes, unidade, alvo e limites vêm da série e permanecem travados. O dashboard permite alterar o nível de visualização sem registrar uma nova corrida.
 7. Histórico, irregularidades e indicadores consultam registros reais. Aceitas, alertas e rejeitadas no dashboard referem-se ao dia de São Paulo; alertas recentes exibem as últimas ocorrências de todo o histórico.
 
-O modelo atual associa **um material/nível a cada combinação**. Se o mesmo código de lote for utilizado para dois níveis, use identificações distintas de lote por nível nesta versão. Não misture níveis com referências diferentes no mesmo gráfico. Irregularidades são ocorrências registradas; ainda não há fluxo de encerramento de ações corretivas.
+O último nível salvo na série realça todos os pontos a partir de ±1, ±2 ou ±3 DP, inclusive a fronteira. O tooltip mostra a classificação original de Westgard de cada corrida. Séries anteriores à mudança mantêm o DP original e começam com o nível visual 2. Irregularidades são ocorrências registradas; ainda não há fluxo de encerramento de ações corretivas.
 
 ## Banco e organização
 
@@ -103,7 +105,7 @@ Lotes usados em corridas não podem ser excluídos, ter seu código alterado ou 
 
 ## Cálculos e regras implementadas
 
-`z = (resultado − alvo) / desvio padrão`. O desvio deve ser positivo; resultados e referências precisam ser finitos. O gráfico mostra alvo e limites de ±1, ±2 e ±3 DP calculados em Python. A média observada e o desvio amostral (`n−1`, quando `n ≥ 2`) são descritivos e **não recalibram os limites**. Pontos incluem data, resultado, status e regras; a tabela expansível oferece os mesmos dados em texto.
+`z = (resultado − alvo) / desvio padrão`. O desvio deve ser positivo; resultados e referências precisam ser finitos. O dashboard recebe as corridas em JSON de `/api/series/<id>` e usa o Chart.js distribuído com o projeto para desenhar um ponto por corrida. O gráfico mostra alvo e limites de ±1, ±2 e ±3 DP calculados em Python. A média observada e o desvio amostral (`n−1`, quando `n ≥ 2`) são descritivos e **não recalibram os limites**. Ao passar o mouse sobre um ponto, aparecem data, resultado, alerta visual, status e regras de Westgard.
 
 | Regra | Condição | Classificação |
 | --- | --- | --- |
@@ -117,7 +119,9 @@ Usa-se a interpretação moderna: 4₁s e 10x não dependem de alerta 1₂s pré
 
 **R₄s não é aplicada**: o formulário atual tem uma única medição por corrida. Essa regra exige comparação dentro da mesma corrida, não entre corridas sucessivas. Para implementá-la, será necessário modelar múltiplos controles por corrida. Referência: [Westgard — definição das regras e distinção entre interpretações clássica e moderna](https://www.westgard.com/westgard-rules).
 
-Limites de bula são avaliados separadamente e sinalizados como “Fora da bula”; não são uma regra Westgard nem alteram sua classificação. Não se infere desvio padrão a partir desses limites.
+A convenção desta aplicação usa mínimo e máximo simétricos em torno do alvo para séries novas. O DP é `(máximo − mínimo) / 6`. Uma faixa de 90 a 110 com alvo 100 resulta em DP de 3,333…. O histórico preserva a indicação “Fora da bula” e a classificação de Westgard.
+
+Em um banco existente, execute `init-db` antes de servir esta versão. O comando adiciona `series.nivel_visual` no MySQL ou no PostgreSQL da Vercel.
 
 ## Verificação
 

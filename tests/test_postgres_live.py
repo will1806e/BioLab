@@ -68,14 +68,19 @@ def test_complete_laboratory_flow(client):
 
     run = {
         'equipamento_id': equipment_id, 'analito': 'Glicose', 'lote': 'NEON-001',
-        'controle': 'Nível 1', 'resultado': '104,5', 'alvo': 100, 'desvio': 2,
-        'unidade': 'mg/dL', 'limite_min': 90, 'limite_max': 110,
+        'controle': 'Nível 1', 'resultado': '104,5', 'alvo': 100,
+        'unidade': 'mg/dL', 'limite_min': 94, 'limite_max': 106,
     }
     first = client.post('/api/corridas', json=run)
     assert first.status_code == 201 and first.json['status'] == 'Alerta'
     second = client.post('/api/corridas', json=run)
     assert second.status_code == 201 and second.json['serie_id'] == first.json['serie_id']
     assert '2_2s' in second.json['regras']
+    detail_url = f"/api/series/{first.json['serie_id']}"
+    before = client.get(detail_url).json
+    assert client.post(detail_url + '/nivel', json={'nivel_visual': 3}).status_code == 200
+    after = client.get(detail_url).json
+    assert after['nivel_visual'] == 3 and after['corridas'] == before['corridas']
     assert client.post('/api/corridas', json={**run, 'desvio': 0}).status_code == 400
     assert len(client.get('/api/corridas').json) == 2
     assert len(client.get('/api/series').json) == 1

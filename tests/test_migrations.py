@@ -66,7 +66,8 @@ def test_upgrade(source, monkeypatch):
                 session['usuario'] = {'id': 1, 'nome': 'Legado', 'cargo': 'Biomedico'}
             if source == 'previous':
                 assert client.post('/api/lotes/1/editar', json={'codigo': 'LEGADO', 'data_validade': '2099-12-31', 'analitos': [1]}).status_code == 200
-            response = client.post('/api/corridas', json=dict(equipamento_id=1, analito='Glicose', lote='LEGADO', controle='N1', resultado=101, alvo=100, desvio=2, unidade='mg/dL'))
+            limits = {} if source == 'previous' else {'limite_min': 94, 'limite_max': 106}
+            response = client.post('/api/corridas', json=dict(equipamento_id=1, analito='Glicose', lote='LEGADO', controle='Nível 3', resultado=101, alvo=100, unidade='mg/dL', **limits))
             assert response.status_code == 201, response.json
             assert len(client.get('/api/historico-legado').json) == (1 if source == 'upstream' else 0)
     finally:

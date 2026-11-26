@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS lote_analito (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- A restrição composta garante uma única série por equipamento/analito/lote.
--- Um lote nessa série corresponde a um único material/nível de controle.
+-- Uma série mantém sua referência estatística e o último nível de visualização.
 CREATE TABLE IF NOT EXISTS series (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     equipamento_id BIGINT UNSIGNED NOT NULL,
@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS series (
     analito VARCHAR(100) NOT NULL,
     lote VARCHAR(100) NOT NULL,
     controle VARCHAR(100) NOT NULL,
+    nivel_visual SMALLINT NOT NULL DEFAULT 2 CHECK (nivel_visual BETWEEN 1 AND 3),
     alvo DOUBLE NOT NULL,
     desvio DOUBLE NOT NULL,
     unidade VARCHAR(30) NOT NULL,

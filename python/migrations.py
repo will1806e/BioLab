@@ -55,6 +55,8 @@ def finish(cursor):
         ensure_unique(cursor, table, field, f'uq_{table}_{field}')
     # O esquema anterior usava nomes livres. Reconstitui o catálogo sem inventar validade.
     existing = columns(cursor, 'series')
+    if 'nivel_visual' not in existing:
+        cursor.execute('ALTER TABLE series ADD COLUMN nivel_visual SMALLINT NOT NULL DEFAULT 2 CHECK (nivel_visual BETWEEN 1 AND 3)')
     for name in ('id_lote', 'id_analito'):
         if name not in existing:
             cursor.execute(f'ALTER TABLE series ADD COLUMN {name} INT NULL')

@@ -12,7 +12,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from db import get_db, close_db, init_db, insert_id, DatabaseError, IntegrityError
-from quality import number, evaluate, summary
+from quality import number, evaluate, summary, bula_sd
 from catalog import catalog, valid_cpf
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -194,6 +194,22 @@ def series_list():
     return jsonify(query(SERIES_SQL + 'ORDER BY e.nome_equipamento, s.analito, s.lote'))
 
 
+@app.post('/api/series/<int:identifier>/nivel')
+@authenticated
+def set_visual_level(identifier):
+    level = body().get('nivel_visual')
+    if type(level) is not int or level not in (1, 2, 3):
+        raise ValueError('Selecione Nível 1, Nível 2 ou Nível 3.')
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute('SELECT id FROM series WHERE id=%s FOR UPDATE', (identifier,))
+        if cursor.fetchone() is None:
+            return jsonify(error='Gráfico não encontrado.'), 404
+        cursor.execute('UPDATE series SET nivel_visual=%s WHERE id=%s', (level, identifier))
+    db.commit()
+    return jsonify(nivel_visual=level)
+
+
 @app.get('/api/series/<int:identifier>')
 @authenticated
 def series_detail(identifier):
@@ -249,9 +265,8 @@ def run_create():
         raise ValueError('Selecione um equipamento válido.')
     equipment = int(equipment)
     names = {key: text(data, key, 30 if key == 'unidade' else 100) for key in ('analito', 'lote', 'controle', 'unidade')}
-    numeric = {key: number(data.get(key), key) for key in ('resultado', 'alvo', 'desvio')}
-    if numeric['desvio'] <= 0:
-        raise ValueError('Desvio padrão deve ser maior que zero.')
+    level = {'Nível 1': 1, 'Nível 2': 2, 'Nível 3': 3}.get(names['controle'])
+    numeric = {key: number(data.get(key), key) for key in ('resultado', 'alvo')}
     for key in ('limite_min', 'limite_max'):
         numeric[key] = None if data.get(key) in (None, '') else number(data[key], key)
     low, high = numeric['limite_min'], numeric['limite_max']
@@ -281,20 +296,29 @@ def run_create():
             cursor.execute('SELECT * FROM series WHERE equipamento_id=%s AND analito=%s AND lote=%s FOR UPDATE',
                            (equipment, names['analito'], names['lote']))
             series = cursor.fetchone()
+            if level is None and not (series and names['controle'] == series['controle']):
+                raise ValueError('Selecione Nível 1, Nível 2 ou Nível 3.')
             if series:
-                for key in ('controle', 'unidade', 'alvo', 'desvio', 'limite_min', 'limite_max'):
+                for key in ('unidade', 'alvo', 'limite_min', 'limite_max'):
                     supplied = names[key] if key in names else numeric[key]
                     if series[key] != supplied:
-                        raise ValueError('Esta série já existe. Mantenha seu material, unidade e parâmetros originais; use outro lote para uma nova referência.')
+                        raise ValueError('Esta série já existe. Mantenha a unidade, o alvo e os limites originais.')
+                # Séries antigas preservam inclusive o DP que foi informado manualmente.
+                sd = series['desvio']
                 identifier = series['id']
+                if level is not None and level != series['nivel_visual']:
+                    cursor.execute('UPDATE series SET nivel_visual=%s WHERE id=%s', (level, identifier))
             else:
-                identifier = insert_id(cursor, 'INSERT INTO series (equipamento_id, analito, lote, controle, unidade, alvo, desvio, limite_min, limite_max, id_lote, id_analito) '
-                                       'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+                sd = bula_sd(low, numeric['alvo'], high)
+                identifier = insert_id(cursor, 'INSERT INTO series (equipamento_id, analito, lote, controle, unidade, alvo, desvio, limite_min, limite_max, id_lote, id_analito, nivel_visual) '
+                                       'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
                                        (equipment, names['analito'], names['lote'], names['controle'], names['unidade'],
-                                        numeric['alvo'], numeric['desvio'], low, high, lot['id'], analyte['id']))
+                                        numeric['alvo'], sd, low, high, lot['id'], analyte['id'], level))
+            if 'desvio' in data and number(data['desvio'], 'desvio') != sd:
+                raise ValueError('O DP é definido pela referência da série.')
             cursor.execute('SELECT resultado FROM corridas WHERE serie_id=%s ORDER BY id DESC LIMIT 9', (identifier,))
             previous = [r['resultado'] for r in reversed(cursor.fetchall())]
-            result = evaluate(previous, numeric['resultado'], numeric['alvo'], numeric['desvio'])
+            result = evaluate(previous, numeric['resultado'], numeric['alvo'], sd)
             outside = (low is not None and numeric['resultado'] < low) or (high is not None and numeric['resultado'] > high)
             run_id = insert_id(cursor, 'INSERT INTO corridas (serie_id, usuario_id, criado_em, resultado, z, status, regras, fora_bula) '
                                'VALUES (%s,%s,%s,%s,%s,%s,%s,%s)',

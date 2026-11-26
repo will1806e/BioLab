@@ -19,7 +19,7 @@
             <h1>Visão geral do CQI</h1>
         </div>
         <div>
-            Cargo ∘ Nome
+            Cargo | Nome
             <img src="../img/logout.png" alt="sair da conta"><!--Colocar cargo da conta e nome da conta-->
         </div>
         <hr>
@@ -89,16 +89,22 @@
         <section> <!--Parte do gráfico-->
             <div class="cq-cabecalho">
                 <h2>Controle de qualidade</h2>
-                <div class="cq-filtro"><label for="filtro-grafico">Filtrar gráficos: equipamento · analito · lote</label>
-                <select id="filtro-grafico"><option>Carregando…</option></select></div>
+                <div class="cq-filtros">
+                    <label>Equipamento<select id="filtro-equipamento" disabled></select></label>
+                    <label>Lote<select id="filtro-lote" disabled></select></label>
+                    <label>Analito<select id="filtro-analito" disabled></select></label>
+                </div>
             </div>
             <div id="grafico" aria-live="polite">Carregando…</div>
-            <p id="grafico-resumo"></p>
-            <p class="cq-legenda"><span class="aceito">● Aceito</span> · <span class="alerta">● Alerta 1₂s</span> · <span class="rejeitado">● Rejeitado</span>. A tabela informa as regras de cada ponto.</p>
-            <details><summary>Ver resultados do gráfico</summary><div class="table-wrap"><table>
-                <thead><tr><th>Data e hora</th><th>Equipamento</th><th>Analito · Lote</th><th>Resultado</th><th>Status / Regras</th></tr></thead>
-                <tbody id="dados-grafico"></tbody>
-            </table></div></details>
+            <div id="grafico-visual" hidden>
+                <label for="nivel-visual">Nível de visualização</label>
+                <select id="nivel-visual">
+                    <option value="1">Nível 1 (±1 DP)</option>
+                    <option value="2">Nível 2 (±2 DP)</option>
+                    <option value="3">Nível 3 (±3 DP)</option>
+                </select>
+            </div>
+
 
         </section>
         <section>
@@ -108,11 +114,13 @@
                     <p>Ocorrências que exigem acompanhamento</p>
                 </div>
                 <div>
-                    <a href="../html/Irregularidades.html"><strong>Ver Todos</strong></a>
+                    <a href="../html/historico.html"><strong>Ver Todos</strong></a>
                 </div>
             </div>
             <div>
-                <ul></ul>
+                <ul id="alertas-recentes-tabela">
+
+                </ul>
             </div>
         </section>
         <section>

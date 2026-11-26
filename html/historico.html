@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/historico.css">
     <script type="module" src="../javaScript/historico.js"></script>
 </head>
 <body class="app-shell page-history">
@@ -18,7 +19,7 @@
             <h1>Histórico de corridas</h1>
         </div>
         <div>
-            Cargo ∘ Nome
+            Cargo | Nome
             <img src="../img/logout.png" alt="sair da conta"> <!--Colocar cargo da conta e nome da conta-->
         </div>
         <hr>
@@ -51,33 +52,38 @@
             <p>RASTREABILIDADE</p>
             <h2>Histórico</h2>
             <p>Consulta de registros, classificação e responsáveis.</p>
+            <button id="limpar-filtros" type="button" disabled>Limpar filtros</button>
         </div>
         <section>
             <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            DATA E HORA
-                        </th>
-                        <th>
-                            EQUIPAMENTO
-                        </th>
-                        <th>
-                            ANALITO
-                        </th>
-                        <th>
-                            LOTE
-                        </th><th>RESULTADO</th>
-                        <th>
-                            RESPONSÁVEL
-                        </th>
-                        <th>
-                            FUNÇÃO
-                        </th>
-                        <th>
-                            STATUS
-                        </th>
+                        <th><input type="date" data-filtro="dia" aria-label="Filtrar por data" disabled></th>
+
+                        <th><select data-filtro="equipamento" aria-label="Filtrar por equipamento" disabled><option value="">Todos</option></select></th>
+
+                        <th><select data-filtro="analito" aria-label="Filtrar por analito" disabled><option value="">Todos</option></select></th>
+
+                        <th><select data-filtro="lote" aria-label="Filtrar por lote" disabled><option value="">Todos</option></select></th>
+
+                        <th></th>
+
+                        <th><select data-filtro="responsavel" aria-label="Filtrar por responsável" disabled><option value="">Todos</option></select></th>
+
+                        <th><select data-filtro="cargo" aria-label="Filtrar por função" disabled><option value="">Todas</option></select></th>
+
+                        <th><select data-filtro="status" aria-label="Filtrar por status" disabled><option value="">Todos</option></select></th>
+                    </tr>
+                    <tr>
+                        <th class="filtro-historico" scope="col">DATA E HORA</th>
+                        <th class="filtro-historico" scope="col">EQUIPAMENTO</th>
+                        <th class="filtro-historico" scope="col">ANALITO</th>
+                        <th class="filtro-historico" scope="col">LOTE</th>
+                        <th scope="col" id="resultado-historico">RESULTADO</th>
+                        <th class="filtro-historico" scope="col">RESPONSÁVEL</th>
+                        <th class="filtro-historico" scope="col">FUNÇÃO</th>
+                        <th class="filtro-historico" scope="col">STATUS</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

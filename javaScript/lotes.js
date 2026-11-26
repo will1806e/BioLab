@@ -39,6 +39,7 @@ function fillCheckboxes(selected = []) {
 function editLot(lot = null) {
     opener = document.activeElement; editing = lot?.id ?? null; lotForm.reset();
     lotPanel.querySelector('h3').textContent = lot ? 'Editar Lote' : 'Adicionar Lotes';
+    lotForm.querySelector('[type=submit]').value = lot ? 'Editar' : 'Adicionar';
     lotForm.lote.value = lot?.codigo || ''; lotForm.validade.value = lot?.data_validade || '';
     lotForm.fabricante.value = lot?.fabricante || '';
     fillCheckboxes(lot?.analitos.map(item => item.id) || []); show(lotPanel);

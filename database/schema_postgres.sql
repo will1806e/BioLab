@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS series (
     analito VARCHAR(100) NOT NULL,
     lote VARCHAR(100) NOT NULL,
     controle VARCHAR(100) NOT NULL,
+    nivel_visual SMALLINT NOT NULL DEFAULT 2 CHECK (nivel_visual BETWEEN 1 AND 3),
     alvo DOUBLE PRECISION NOT NULL,
     desvio DOUBLE PRECISION NOT NULL CHECK (desvio > 0),
     unidade VARCHAR(30) NOT NULL,
@@ -50,6 +51,8 @@ CREATE TABLE IF NOT EXISTS series (
     UNIQUE (equipamento_id, analito, lote),
     CHECK (limite_min IS NULL OR limite_max IS NULL OR limite_min <= limite_max)
 );
+
+ALTER TABLE series ADD COLUMN IF NOT EXISTS nivel_visual SMALLINT NOT NULL DEFAULT 2 CHECK (nivel_visual BETWEEN 1 AND 3);
 
 CREATE TABLE IF NOT EXISTS corridas (
     id BIGSERIAL PRIMARY KEY,

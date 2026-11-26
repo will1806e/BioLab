@@ -1,15 +1,17 @@
 import {api, sessionRequired, bindForm, message} from './app.js';
 
 const form = document.getElementById('form-corrida');
-const fields = {controle: 'controle', alvo: 'valor-alvo', desvio: 'desvio-padrao',
+const fields = {alvo: 'valor-alvo',
     unidade: 'unidade', limite_min: 'limite-min', limite_max: 'limite-max'};
 let series = [], lots = [];
-const normalized = value => value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-// Parâmetros de uma série já iniciada permanecem imutáveis.
+// Usa os IDs do catálogo para distinguir séries da mesma forma nos dois bancos.
 function syncReference() {
-    const existing = series.find(item => String(item.equipamento_id) === form.equipamento.value &&
-        normalized(item.analito) === normalized(form.analito.value) && normalized(item.lote) === normalized(form.lote.value));
+    const lot = lots.find(item => item.codigo === form.lote.value);
+    const analyte = lot?.analitos.find(item => item.nome === form.analito.value);
+    const existing = analyte && series.find(item => String(item.equipamento_id) === form.equipamento.value &&
+        item.id_lote === lot.id && item.id_analito === analyte.id);
+    form.controle.value = `Nível ${existing?.nivel_visual || 2}`;
     for (const [key, id] of Object.entries(fields)) {
         const input = document.getElementById(id);
         if (existing) input.value = existing[key] ?? '';
@@ -50,7 +52,7 @@ async function start() {
     form.querySelector('[type="submit"]').disabled = !available;
     if (!available) message('Cadastre um equipamento e um lote válido com analitos antes de continuar.');
     bindForm(form, async data => {
-        const payload = {equipamento_id: data.get('equipamento'), analito: data.get('analito'), lote: data.get('lote'), resultado: data.get('resultado')};
+        const payload = {controle: data.get('controle'), equipamento_id: data.get('equipamento'), analito: data.get('analito'), lote: data.get('lote'), resultado: data.get('resultado')};
         for (const [key, id] of Object.entries(fields)) payload[key] = data.get(id);
         const result = await api('corridas', payload);
         location.href = `index.html?serie=${result.serie_id}`;

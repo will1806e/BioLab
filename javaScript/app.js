@@ -6,6 +6,10 @@ export async function api(path, data) {
             method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)
         })
     });
+    const mediaType = (response.headers.get('Content-Type') || '').split(';')[0].trim().toLowerCase();
+    if (mediaType !== 'application/json' && !mediaType.endsWith('+json')) {
+        throw new Error(`A API não retornou JSON (HTTP ${response.status}). Verifique se o servidor da aplicação está em execução.`);
+    }
     const payload = await response.json();
     if (!response.ok) {
         if (response.status === 401 && !['login', 'sessao'].includes(path)) location.href = 'login.html';
@@ -39,12 +43,12 @@ export async function sessionRequired() {
         const header = document.querySelector('body > header > div:nth-child(2)');
         if (header) {
             const exit = header.querySelector('img');
-            const button = element('button', 'Sair'); button.type = 'button';
+            const button = element('button', 'Sair', 'sair-conta'); button.type = 'button';
             button.addEventListener('click', async () => {
                 try { await api('logout', {}); location.href = 'login.html'; }
                 catch (error) { message(error.message); }
             });
-            header.replaceChildren(document.createTextNode(`${user.cargo} ∘ ${user.nome} `), button);
+            header.replaceChildren(document.createTextNode(`${user.cargo} | ${user.nome} `), button);
             if (exit) { button.replaceChildren(exit); button.setAttribute('aria-label', 'Sair da conta'); }
         }
         return user;
@@ -75,8 +79,6 @@ export function renderRuns(target, runs, history = false) {
         if (history) values.push(run.responsavel, run.cargo);
         values.forEach(value => row.append(element('td', value)));
         const status = element('td'); status.append(statusBadge(run));
-        if (run.regras.length) status.append(element('small', ` ${run.regras.join(', ')}`));
-        if (run.fora_bula) status.append(element('small', ' · Fora da bula'));
         row.append(status); target.append(row);
     }
     if (!runs.length) {

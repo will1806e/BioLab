@@ -19,7 +19,7 @@
             <h1>Registrar Corrida de CQI</h1>
         </div>
         <div>
-            Cargo ∘ Nome
+            Cargo | Nome
             <img src="../img/logout.png" alt="sair da conta"> <!--Colocar cargo da conta e nome da conta-->
         </div>
         <hr>
@@ -71,7 +71,11 @@
                 <div>
                     <div>
                         <label for="controle">Material de controle</label>
-                        <input type="text" id="controle" name="controle" required maxlength="100">
+                        <select id="controle" name="controle" required>
+                            <option>Nível 1</option>
+                            <option selected>Nível 2</option>
+                            <option>Nível 3</option>
+                        </select>
                     </div>
                     <div>
                         <label for="analito">Analito</label>
@@ -93,7 +97,7 @@
                 <div>
                     <div>
                         <label for="limite-max">Limite máximo da bula</label>
-                        <input type="text" name="limite-max" id="limite-max">
+                        <input type="text" name="limite-max" id="limite-max" inputmode="decimal" required>
                     </div>
                     <div>
                         <label for="unidade">Unidade de medida</label>
@@ -103,13 +107,12 @@
                 <div>
                     <div>
                         <label for="limite-min">Limite mínimo da bula</label>
-                        <input type="text" name="limite-min" id="limite-min">
+                        <input type="text" name="limite-min" id="limite-min" inputmode="decimal" required>
                     </div>
 
                 </div>
-                <div><div><label for="desvio-padrao">Desvio padrão de referência</label><input type="text" id="desvio-padrao" name="desvio-padrao" required></div></div>
                 <div class="form-actions">
-                    <input type="submit" value="Registrar corrida">
+                    <input type="submit" value="Registrar corrida" disabled>
                 </div>
             </form>
         </section>

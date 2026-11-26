@@ -16,6 +16,19 @@ def number(value, field):
         raise ValueError(f'{field}: informe um número finito entre -10¹² e 10¹².') from None
 
 
+def bula_sd(low, target, high):
+    """Convenção do BioLab: os extremos simétricos da bula representam ±3 DP."""
+    if low is None or high is None or not low < target < high:
+        raise ValueError('Informe um mínimo abaixo do alvo e um máximo acima do alvo.')
+    midpoint = (low + high) / 2
+    if abs(target - midpoint) > 2 * max(math.ulp(v) for v in (low, target, high)):
+        raise ValueError('O alvo deve ser o ponto médio entre os limites da bula (±3 DP).')
+    sd = (high - low) / 6
+    if sd <= 0:
+        raise ValueError('Os limites da bula são próximos demais para calcular o DP.')
+    return sd
+
+
 def evaluate(previous, result, target, sd):
     """Avalia a última corrida, sem misturar séries ou recalcular o alvo.
 

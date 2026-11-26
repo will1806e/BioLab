@@ -121,15 +121,16 @@ button, input, select { font: inherit; }
     font-weight: 600;
     white-space: nowrap;
 }
-.app-shell > header > div:nth-child(2) img {
-    width: 2.35rem;
-    height: 2.35rem;
-    padding: .65rem;
-    background: var(--blue-100);
-    border-radius: 50%;
-    transition: 180ms ease;
+.app-shell > header .sair-conta {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: .35rem;
+    box-shadow: none;
+    transform: none;
 }
-.app-shell > header > div:nth-child(2) img:hover { background: #d8edf8; transform: translateY(-1px); }
+.app-shell > header .sair-conta img { display: block; width: 1.4rem; height: 1.4rem; }
+.app-shell > header .sair-conta:focus-visible { outline: 2px solid var(--blue-700); }
 .app-shell > header hr, .app-shell > footer hr { display: none; }
 .app-shell > main {
     grid-column: 2;
@@ -200,7 +201,7 @@ button, input, select { font: inherit; }
 .page-dashboard main > section:nth-child(2) {
     min-height: 18rem;
     padding: 1.5rem;
-    background: linear-gradient(to top, rgba(8, 116, 185, .07) 1px, transparent 1px) 0 3.5rem / 100% 3.5rem, var(--surface);
+    background: var(--surface);
 }
 .page-dashboard main > section:nth-child(2) h2 { color: var(--navy-950); font-size: 1.1rem; }
 .page-dashboard main > section:nth-child(3), .page-dashboard main > section:nth-child(4) { padding: 1.5rem; }
@@ -304,6 +305,18 @@ input:disabled { color: #8ba0ae; background: #edf3f6; cursor: not-allowed; }
 
 /* Histórico */
 .page-history main > section { padding: 0; overflow: hidden; }
+.page-history th { vertical-align: top; }
+.page-history th [data-filtro] {
+    display: block; width: 100%; min-width: 7rem; max-width: 12rem;
+    margin-top: .4rem; padding: .35rem .5rem; font-size: .82rem;
+    font-weight: 400; letter-spacing: normal; text-transform: none;
+}
+.page-history th select[data-filtro] { padding-right: 1.5rem; }
+.page-history #limpar-filtros {
+    justify-self: start; margin-top: .5rem; padding: .3rem .6rem;
+    color: var(--blue-700); background: var(--surface); box-shadow: none;
+}
+.page-history #limpar-filtros:disabled { opacity: .55; cursor: default; transform: none; }
 
 /* Equipamentos */
 .page-equipment main > article { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.5rem; }

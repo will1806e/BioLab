@@ -29,7 +29,7 @@ def client(monkeypatch):
 
 def payload(equipment):
     return dict(equipamento_id=equipment, analito='Glicose', lote='L01', controle='Nível 1',
-                resultado='104,5', alvo=100, desvio=2, unidade='mg/dL', limite_min=90, limite_max=110)
+                resultado='104,5', alvo=100, unidade='mg/dL', limite_min=94, limite_max=106)
 
 
 def test_series_and_validation(client):
@@ -38,7 +38,7 @@ def test_series_and_validation(client):
     data = payload(first)
     one = client.post('/api/corridas', json=data)
     assert one.status_code == 201 and one.json['status'] == 'Alerta'
-    two = client.post('/api/corridas', json=data)
+    two = client.post('/api/corridas', json={**data, 'controle': 'Nível 2'})
     assert two.json['serie_id'] == one.json['serie_id']
     assert '2_2s' in two.json['regras']
     for change in [{'equipamento_id': second}, {'analito': 'Ureia'}, {'lote': 'L02'}]:
@@ -46,11 +46,17 @@ def test_series_and_validation(client):
         assert response.status_code == 201
         assert response.json['serie_id'] != one.json['serie_id']
         assert response.json['regras'] == ['1_2s']
-    for change in [{'desvio': 0}, {'resultado': 'NaN'}, {'alvo': 101}, {'controle': 'Nível 2'},
+    for change in [{'desvio': 0}, {'resultado': 'NaN'}, {'alvo': 101}, {'controle': 'Nível 4'},
                    {'limite_min': 120}, {'equipamento_id': 99999}, {'resultado': ''}]:
         assert client.post('/api/corridas', json={**data, **change}).status_code == 400
     assert len(client.get('/api/series').json) == 4
     detail = client.get(f"/api/series/{one.json['serie_id']}").json
+    assert detail['nivel_visual'] == 2 and detail['desvio'] == 2
+    url = f"/api/series/{detail['id']}"
+    assert client.post(url + '/nivel', json={'nivel_visual': 0}).status_code == 400
+    assert client.post(url + '/nivel', json={'nivel_visual': 3}).status_code == 200
+    updated = client.get(url).json
+    assert updated['nivel_visual'] == 3 and updated['corridas'] == detail['corridas']
     assert len(detail['corridas']) == 2
     assert len(detail['limites']) == 7
     assert detail['estatisticas']['media'] == 104.5
@@ -65,8 +71,9 @@ def test_auth_and_bula(client):
     assert client.post('/api/login', json={'nome': 'Teste', 'senha': 'errada'}).status_code == 401
     assert client.post('/api/equipamentos', json={'nome': 'A', 'modelo': 'M', 'numero_serie': 'S'}, headers={'Origin': 'https://other.test'}).status_code == 403
     equipment = client.post('/api/equipamentos', json={'nome': 'A', 'modelo': 'M', 'numero_serie': 'S'}).json['id']
-    result = client.post('/api/corridas', json={**payload(equipment), 'resultado': 100, 'limite_max': 99}).json
-    assert result['status'] == 'Aceito' and result['fora_bula']
+    assert client.post('/api/corridas', json={**payload(equipment), 'limite_min': 99}).status_code == 400
+    result = client.post('/api/corridas', json={**payload(equipment), 'resultado': 107}).json
+    assert result['status'] == 'Rejeitado' and result['fora_bula']
 
 
 def test_concurrent_creation(client):
