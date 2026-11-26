@@ -9,6 +9,7 @@ CREATE TABLE usuarios(
     funcao ENUM('Biomédico', 'Gestor de Qualidade', 'Coordenador Técnico')
 );
 
+ALTER TABLE usuarios RENAME COLUMN senha TO senha_hash;
 ALTER TABLE usuarios MODIFY COLUMN cpf CHAR(11) NOT NULL;
 ALTER TABLE usuarios MODIFY COLUMN funcao ENUM('Biomédico', 'Gestor de Qualidade', 'Coordenador Técnico') NOT NULL;
 
