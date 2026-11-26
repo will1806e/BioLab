@@ -22,7 +22,10 @@ function syncReference() {
 function updateAnalytes() {
     const lot = lots.find(item => item.codigo === form.lote.value);
     const previous = form.analito.value;
-    form.analito.replaceChildren(new Option('Selecione um analito', ''));
+    // Libera a escolha apenas após selecionar um lote com analitos cadastrados.
+    form.analito.disabled = !lot?.analitos.length;
+    form.analito.replaceChildren(new Option(!lot ? 'Selecione um lote primeiro' :
+        lot.analitos.length ? 'Selecione um analito' : 'Lote sem analitos cadastrados', ''));
     lot?.analitos.forEach(item => form.analito.add(new Option(item.nome, item.nome)));
     if (lot?.analitos.some(item => item.nome === previous)) form.analito.value = previous;
     syncReference();
