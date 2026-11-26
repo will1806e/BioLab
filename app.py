@@ -1,0 +1,6 @@
+"""Entrypoint da aplicação Flask no Vercel."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent / 'python'))
+from python.app import app  # noqa: E402

@@ -6,12 +6,12 @@ from datetime import datetime, timedelta, timezone
 from functools import wraps
 from pathlib import Path
 
-import pymysql
 from flask import Flask, jsonify, request, session, send_from_directory, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.exceptions import HTTPException
+from werkzeug.middleware.proxy_fix import ProxyFix
 
-from db import get_db, close_db, init_db
+from db import get_db, close_db, init_db, insert_id, DatabaseError, IntegrityError
 from quality import number, evaluate, summary
 from catalog import catalog, valid_cpf
 
@@ -19,7 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 app = Flask(__name__, static_folder=None)
 app.config.update(SECRET_KEY=os.getenv('SECRET_KEY') or secrets.token_hex(32),
                   SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Strict',
+                  SESSION_COOKIE_SECURE=bool(os.getenv('VERCEL')),
                   MAX_CONTENT_LENGTH=32 * 1024)
+if os.getenv('VERCEL'):
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.teardown_appcontext(close_db)
 app.register_blueprint(catalog)
 
@@ -68,10 +71,10 @@ def invalid(error):
     return jsonify(error=str(error)), 400
 
 
-@app.errorhandler(pymysql.MySQLError)
+@app.errorhandler(DatabaseError)
 def database_error(error):
-    app.logger.exception('Falha MySQL')
-    return jsonify(error='Não foi possível acessar o MySQL. Confira a conexão e execute init-db.'), 503
+    app.logger.exception('Falha no banco de dados')
+    return jsonify(error='Não foi possível acessar o banco de dados. Confira a conexão e a inicialização.'), 503
 
 
 @app.errorhandler(HTTPException)
@@ -114,7 +117,7 @@ def register():
             cursor.execute('INSERT INTO usuarios (nome_usu, senha_hash, funcao, cpf) VALUES (%s,%s,%s,%s)',
                            (name, generate_password_hash(password), role, cpf))
         get_db().commit()
-    except pymysql.IntegrityError:
+    except IntegrityError:
         get_db().rollback()
         return jsonify(error='Nome de usuário ou CPF já cadastrado.'), 409
     return jsonify(message='Cadastro realizado. Entre com sua conta.'), 201
@@ -164,10 +167,9 @@ def equipment_create():
         raise ValueError('Observações: máximo de 500 caracteres.')
     try:
         with get_db().cursor() as cursor:
-            cursor.execute('INSERT INTO equipamentos (nome_equipamento, modelo, numero_serie, observacoes) VALUES (%s,%s,%s,%s)', (name, model, serial, notes))
-            identifier = cursor.lastrowid
+            identifier = insert_id(cursor, 'INSERT INTO equipamentos (nome_equipamento, modelo, numero_serie, observacoes) VALUES (%s,%s,%s,%s)', (name, model, serial, notes))
         get_db().commit()
-    except pymysql.IntegrityError:
+    except IntegrityError:
         get_db().rollback()
         return jsonify(error='Equipamento já cadastrado.'), 409
     return jsonify(id=identifier, nome=name), 201
@@ -286,20 +288,18 @@ def run_create():
                         raise ValueError('Esta série já existe. Mantenha seu material, unidade e parâmetros originais; use outro lote para uma nova referência.')
                 identifier = series['id']
             else:
-                cursor.execute('INSERT INTO series (equipamento_id, analito, lote, controle, unidade, alvo, desvio, limite_min, limite_max, id_lote, id_analito) '
-                               'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
-                               (equipment, names['analito'], names['lote'], names['controle'], names['unidade'],
-                                numeric['alvo'], numeric['desvio'], low, high, lot['id'], analyte['id']))
-                identifier = cursor.lastrowid
+                identifier = insert_id(cursor, 'INSERT INTO series (equipamento_id, analito, lote, controle, unidade, alvo, desvio, limite_min, limite_max, id_lote, id_analito) '
+                                       'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+                                       (equipment, names['analito'], names['lote'], names['controle'], names['unidade'],
+                                        numeric['alvo'], numeric['desvio'], low, high, lot['id'], analyte['id']))
             cursor.execute('SELECT resultado FROM corridas WHERE serie_id=%s ORDER BY id DESC LIMIT 9', (identifier,))
             previous = [r['resultado'] for r in reversed(cursor.fetchall())]
             result = evaluate(previous, numeric['resultado'], numeric['alvo'], numeric['desvio'])
             outside = (low is not None and numeric['resultado'] < low) or (high is not None and numeric['resultado'] > high)
-            cursor.execute('INSERT INTO corridas (serie_id, usuario_id, criado_em, resultado, z, status, regras, fora_bula) '
-                           'VALUES (%s,%s,%s,%s,%s,%s,%s,%s)',
-                           (identifier, session['usuario']['id'], datetime.now(timezone.utc).replace(tzinfo=None),
-                            numeric['resultado'], result['z'], result['status'], json.dumps(result['regras']), outside))
-            run_id = cursor.lastrowid
+            run_id = insert_id(cursor, 'INSERT INTO corridas (serie_id, usuario_id, criado_em, resultado, z, status, regras, fora_bula) '
+                               'VALUES (%s,%s,%s,%s,%s,%s,%s,%s)',
+                               (identifier, session['usuario']['id'], datetime.now(timezone.utc).replace(tzinfo=None),
+                                numeric['resultado'], result['z'], result['status'], json.dumps(result['regras']), outside))
             cursor.execute('INSERT INTO historico (data_hora,id_equipamento,id_analito,id_lote,id_usuario,status,corrida_id) '
                            'SELECT criado_em,%s,%s,%s,usuario_id,%s,id FROM corridas WHERE id=%s',
                            (equipment, analyte['id'], lot['id'], {'Aceito': 'Normal', 'Alerta': 'Alerta', 'Rejeitado': 'Não Conformidade'}[result['status']], run_id))

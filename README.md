@@ -1,6 +1,6 @@
 # BioLab — controle interno de qualidade
 
-Aplicação acadêmica com páginas HTML, JavaScript modular por página, API Python/Flask e persistência MySQL. O gráfico de **Levey-Jennings** aparece no dashboard e pode ser selecionado pelo filtro à direita de “Controle de qualidade”. Não há importação de CSV nesta etapa.
+Aplicação acadêmica com páginas HTML, JavaScript modular por página e API Python/Flask. Usa MySQL na execução local e Neon Postgres na implantação Vercel. O gráfico de **Levey-Jennings** aparece no dashboard e pode ser selecionado pelo filtro à direita de “Controle de qualidade”. Não há importação de CSV nesta etapa.
 
 ## Integração com as novidades do repositório
 
@@ -33,7 +33,15 @@ Conexão padrão: host `127.0.0.1`, porta `3306`, usuário `root`, senha vazia, 
 
 É possível personalizar com variáveis de ambiente, por exemplo `$env:DB_NAME='biolab'`. O arquivo `.env.example` apenas documenta as opções; não é carregado automaticamente. `SECRET_KEY` é opcional para uso local: sem ela, as sessões expiram ao reiniciar o servidor. A configuração root sem senha atende ao ambiente local solicitado; Flask está vinculado a `127.0.0.1`.
 
-O `vercel.json` original serve as páginas estáticas, mas **não publica esta API Python nem o banco local**. Para esta versão completa, use o servidor Flask. Hospedagem remota exige uma implantação própria da API e do MySQL.
+## Hospedagem no Vercel
+
+O `app.py` na raiz expõe a aplicação Flask como Vercel Function. O `vercel.json` fixa a região `gru1`, próxima ao banco Neon Postgres. Páginas e API usam a mesma origem, então o navegador continua chamando `/api/...` sem configuração de CORS.
+
+O projeto Vercel precisa das variáveis de produção `DATABASE_URL` e `DATABASE_URL_UNPOOLED` fornecidas pela integração Neon, além de `SECRET_KEY` persistente. O esquema inicial está em `database/schema_postgres.sql` e é criado uma vez com `python -m flask --app python/app.py init-db` sob as variáveis de produção. O inicializador usa `CREATE TABLE IF NOT EXISTS` e não insere contas ou dados demonstrativos. Para executar o comando localmente com o ambiente do projeto vinculado, use `vercel env run -e production -- python -m flask --app python/app.py init-db`.
+
+O Neon criado para a implantação começa vazio: **dados de um MySQL local não são copiados automaticamente**. Para levar dados existentes à nuvem, é necessária uma migração separada e conferida. O arquivo `.env.example` continua descrevendo somente o MySQL local; nunca publique credenciais no repositório.
+
+Depois de conectar o repositório Git ao projeto Vercel, pushes na branch de produção podem gerar novas implantações automaticamente. Sem essa conexão, publique pelo CLI a partir de um checkout limpo.
 
 ## Fluxo de uso
 
@@ -65,6 +73,8 @@ Chaves estrangeiras mantêm os vínculos. A gravação bloqueia o equipamento du
 ```text
 python/app.py               Rotas, validação, sessões e transações
 python/db.py                Conexão MySQL e inicialização
+app.py                      Entrada Flask para Vercel
+database/schema_postgres.sql Esquema inicial do Neon Postgres
 python/migrations.py        Adaptação dos bancos existentes
 python/catalog.py           CPF, lotes e analitos
 python/quality.py           Cálculos e regras de Westgard
@@ -120,5 +130,7 @@ $env:BIOLAB_TEST_MYSQL='1'
 ```
 
 Os testes de integração criam bancos com prefixo `biolab_test_` e identificadores aleatórios. Não usam o banco de trabalho e não executam exclusões automáticas. Cobrem identidade da série, isolamento das regras, transações concorrentes, validação, autenticação e limites de bula. Sem a variável, a suíte do banco é ignorada explicitamente.
+
+Para conferir a API com Postgres, `BIOLAB_TEST_POSTGRES=1` habilita `tests/test_postgres_live.py`. O teste cria um esquema `qa_` com identificador aleatório no banco indicado por `DATABASE_URL_UNPOOLED`, exercita cadastro, login, catálogos, corrida e consultas, e remove somente esse esquema ao terminar. Execute apenas com credenciais de um banco de teste ou de uma instância controlada.
 
 Validação desta integração: 29 testes automatizados aprovados em MariaDB/XAMPP, incluindo migrações dos dois esquemas, repetição da inicialização, concorrência, CPF, relações lote/analito e proteção de exclusão. Fluxos novos também verificados no navegador Edge, incluindo dashboard em largura móvel. MySQL 8 não foi executado separadamente neste ambiente.
