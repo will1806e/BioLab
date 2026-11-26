@@ -64,7 +64,7 @@ th, td{
 }
 
 .novo-lote{
-    height: min(80vh, 35rem);
+    height: min(80vh, 38rem);
     width: min(90vw, 50rem);
     overflow-y: auto;
 }
@@ -138,8 +138,8 @@ div:has(> #add-amostra){
 }
 
 #gerenciar-analitos{
+    z-index: 1001;
     overflow-y: auto;
-    display: block;
     height: auto;
 }
 

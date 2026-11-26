@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/lotes.css">
+    <script src="../javaScript/lotes.js" defer></script>
 </head>
 <body class="app-shell page-history">
     <header>
@@ -47,13 +48,13 @@
         </nav>
     </aside>
     <main>
-        <div hidden class="fundo-voltar">
-            <section hidden class="deletar-lote">
+        <div class="fundo-voltar escondido">
+            <section class="deletar-lote escondido">
                 <p><strong>Você tem certeza que deseja excluir permanentemente este lote?</strong></p>
-                <div><button>Cancelar</button> <button class="deletar">Deletar</button></div>
+                <div><button id="botao-cancelar" type="reset" form="form-analito">Cancelar</button> <button class="deletar" type="submit" form="form-analito">Deletar</button></div>
             </section>
 
-            <section hidden class="novo-lote">
+            <section class="novo-lote escondido">
                 <div class="titulo-voltar">
                     <h3>Adicionar Lotes</h3>
                     <img class="icon-fechar" src="../img/close.png" alt="Fechar Tela">
@@ -88,20 +89,20 @@
                     </div>
                 </form>
             </section>  
-            <section hidden class="novo-lote" id="gerenciar-analitos"> <!--Gerenciamento de amostras-->
+            <section class="novo-lote escondido" id="gerenciar-analitos"> <!--Gerenciamento de amostras-->
                 <div class="titulo-voltar">
                     <h3>Gerenciar Analitos</h3>
                     <img class="icon-fechar" src="../img/close.png" alt="Fechar Tela">
                 </div>
                 <p>Não é possível excluir um analito que pertence a algum lote.</p>
-                <form action="" method="post">
+                <form action="" method="post" id="form-analito">
                     <div>
                         <label for="analito">Nome do Analito:</label>
                         <input type="text" name="analito" id="analito" placeholder="Digite aqui..." required>
                     </div>
                     <div class="div-botao">
                         <input type="submit" value="Adicionar">
-                        <input type="button" value="Deletar">
+                        <input id="botao-deletar" type="button" value="Deletar">
                     </div>
                 </form>
             </section>
@@ -114,7 +115,7 @@
                 <p>Consulta e gerenciamento de lotes cadastrados.</p>
             </div>
             <div >
-                <button>Novo Lote</button>
+                <button id="novolote">Novo Lote</button>
             </div>
         </div>
         <section>

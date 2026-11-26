@@ -408,3 +408,7 @@ input:disabled { color: #8ba0ae; background: #edf3f6; cursor: not-allowed; }
     height: 2rem;
     cursor: pointer;
 }
+
+.escondido{
+    display: none !important;
+}
